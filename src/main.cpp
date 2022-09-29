@@ -1,20 +1,5 @@
 #include "main.h"
-
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+#include "pal/gterm.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -23,10 +8,34 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	/* Initialize with NULL to use the default screen
+	 * Using pages should be supported but is untested
+	 */
+	gterm_init(NULL);
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	/* Basic print */
+	gterm_print("Hello, World!");
+
+	/* Recolor a line of text as RED:
+	 * Use # as an escape character
+	 * followed by 6 hex digits (the color)
+	 * then a space (it will be removed)
+	 * End the recoloring with a # (no space required)
+	 * 
+	 * Note that due to recoloring, you cannot use '#' in your text!
+	 */
+	gterm_print("Motor 1 has #ff0000 failed!#");
+
+	/* Long text example - the line is truncated to fit on the screen */
+	gterm_print("According to all known laws of aviation, there is no way that a bee should be able to fly. Its wings are too small to get its fat little body off the ground. The bee, of course, flies anyway because bees don't care what humans think is impossible.");
+
+	/* Another line after the long one, this time in green */
+	gterm_print("#00ff00 This is fun#");
+
+	/* Include some numbers here, using printf syntax */
+	double distance = 6.06;
+	int state = 3;
+	gterm_print("The distance was %03.3f, state is %2d",distance,state);
 }
 
 /**
@@ -74,19 +83,5 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
 
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
-
-		left_mtr = left;
-		right_mtr = right;
-		pros::delay(20);
-	}
 }
