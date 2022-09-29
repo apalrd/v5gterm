@@ -53,7 +53,7 @@ gterm_clean();
 ## Installation with PROS
 To add this library to your PROS project:
 
-Download the latest release zip file (i.e. v5gterm@1.0.0.zip) from Github's release page into your project folder
+Download the latest release zip file (i.e. `v5gterm@1.0.0.zip`) from Github's release page into your project folder
 
 Add the zip file to pros's local template archive (using the filename of the version you downloaded):
 ```bash
