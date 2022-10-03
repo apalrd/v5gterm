@@ -2,6 +2,8 @@
 
 This is a library for VEX V5 using PROS, to provide a printf-like terminal display on the graphical screen.
 
+![Screenshot](https://github.com/apalrd/v5gterm/blob/main/gterm.png?raw=true)
+
 Usage:
 
 `gterm_init(page)` - Initialize the library on screen, provide an lv_obj_t * parent. If NULL the entire screen will be used.
