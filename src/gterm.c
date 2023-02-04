@@ -7,21 +7,21 @@
 /* Include our own header */
 #include "pal/gterm.h"
 
-/* Include PROS apix header */
-#include "pros/apix.h"
+/* Include lvgl header */
+#include "display/lvgl.h"
 
 /* Definitions of maximum buffer sizes:
- * Default font is 20px tall and between 2 and 17px wide depending on the glyph
+ * Default font is 16px tall and between 2 and ??px wide depending on the glyph
  * On the 480x240 screen that gets us:
  * width = 480 / 2 = 240 chars if they are all . or 28 chars if they are all W
  * width could also include control characters to change the color
- * Using 256 bytes as maximum width
- * height = 240 / 20 = 12 lines of text, but there are 2 bytes padding on all but the last line
+ * Using 256 bytes as maximum width for static memory sizing
+ * height = 240 / 16 = 15 lines of text, but there are 2 bytes padding on all but the last line
  * so 11 lines of text
  */
 #define GTERM_MAX_WIDTH 256
-#define GTERM_MAX_LINES 11
-#define GTERM_FONT_HEIGHT 22
+#define GTERM_MAX_LINES 15
+#define GTERM_FONT_HEIGHT 16
 #define GTERM_FONT_PAD 2
 
 /* Create buffer to store text going on screen */

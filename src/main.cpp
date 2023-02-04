@@ -36,6 +36,11 @@ void initialize() {
 	double distance = 6.06;
 	int state = 3;
 	gterm_print("The distance was %03.3f, state is %2d",distance,state);
+
+	for(int i = 0; i < 10; i++)
+	{
+		gterm_print("Line %d",i);
+	}
 }
 
 /**
