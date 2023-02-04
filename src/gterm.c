@@ -66,9 +66,9 @@ void gterm_init(lv_obj_t * page)
     gterm_act_lines = (lv_obj_get_height(page)+GTERM_FONT_PAD)/GTERM_FONT_HEIGHT;
 
     /* Create the label object in the parent page */
-    gterm_stream = lv_label_create(page,NULL);
+    gterm_stream = lv_label_create(page);
     lv_label_set_text(gterm_stream,"");
-    lv_obj_align(gterm_stream,0,LV_ALIGN_IN_TOP_LEFT,0,0);
+    lv_obj_align(gterm_stream,LV_ALIGN_TOP_LEFT,0,0);
     lv_label_set_recolor(gterm_stream,true);
     gterm_has_init = true;
 }
