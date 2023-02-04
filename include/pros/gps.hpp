@@ -1,5 +1,6 @@
 /**
  * \file pros/gps.hpp
+ * \ingroup cpp-gps
  *
  * Contains prototypes for functions related to the VEX GPS.
  *
@@ -9,11 +10,14 @@
  * This file should not be modified by users, since it gets replaced whenever
  * a kernel upgrade occurs.
  *
- * Copyright (c) 2017-2022, Purdue University ACM SIGBots.
+ * \copyright (c) 2017-2023, Purdue University ACM SIGBots.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * \defgroup cpp-gps VEX GPS Sensor C API
+ * \note For a pros-specific usage guide on the GPS, please check out our article [here.](@ref gps)
  */
 
 #ifndef _PROS_GPS_HPP_
@@ -22,26 +26,36 @@
 #include <stdbool.h>
 
 #include <cstdint>
+#include <iostream>
 
 #include "pros/gps.h"
+#include "pros/device.hpp"
 
 namespace pros {
-class Gps {
-	const std::uint8_t _port;
+inline namespace v5 {
+/**
+ * \ingroup cpp-gps
+ *  @{
+ */
+class Gps : public Device {
+	/**
+	 * \addtogroup cpp-gps
+	 *  @{
+	 */
 
 	public:
-	Gps(const std::uint8_t port) : _port(port){};
+	Gps(const std::uint8_t port) : Device(port){};
 
-	Gps(const std::uint8_t port, double xInitial, double yInitial, double headingInitial) : _port(port) {
+	Gps(const std::uint8_t port, double xInitial, double yInitial, double headingInitial) : Device(port){
 		pros::c::gps_set_position(port, xInitial, yInitial, headingInitial);
 	};
 
-	Gps(const std::uint8_t port, double xOffset, double yOffset) : _port(port) {
+	Gps(const std::uint8_t port, double xOffset, double yOffset) : Device(port){
 		pros::c::gps_set_offset(port, xOffset, yOffset);
 	};
 
 	Gps(const std::uint8_t port, double xInitial, double yInitial, double headingInitial, double xOffset, double yOffset)
-	    : _port(port) {
+	     : Device(port){
 		pros::c::gps_initialize_full(port, xInitial, yInitial, headingInitial, xOffset, yOffset);
 	};
 
@@ -171,7 +185,7 @@ class Gps {
 	 * If the operation failed, all the structure's members are filled with
 	 * PROS_ERR_F and errno is set.
 	 */
-	virtual pros::c::gps_status_s_t get_status() const;
+	virtual pros::gps_status_s_t get_status() const;
 
 	/**
 	 * Get the heading in [0,360) degree values.
@@ -258,7 +272,7 @@ class Gps {
 	 * \return The raw gyroscope values. If the operation failed, all the
 	 * structure's members are filled with PROS_ERR_F and errno is set.
 	 */
-	virtual pros::c::gps_gyro_s_t get_gyro_rate() const;
+	virtual pros::gps_gyro_s_t get_gyro_rate() const;
 
 	/**
 	 * Get the GPS's raw accelerometer values
@@ -274,11 +288,31 @@ class Gps {
 	 * \return The raw accelerometer values. If the operation failed, all the
 	 * structure's members are filled with PROS_ERR_F and errno is set.
 	 */
-	virtual pros::c::gps_accel_s_t get_accel() const;
+	virtual pros::gps_accel_s_t get_accel() const;
 
+	/**
+	 * This is the overload for the << operator for printing to streams
+	 * 
+	 * Prints in format:
+	 * Gps [port: gps._port, x: (x position), y: (y position), heading: (gps heading), rotation: (gps rotation)]
+	 */
+	friend std::ostream& operator<<(std::ostream& os, const pros::Gps& gps);
+
+	/**
+	 * Returns the type of device
+	 *
+	 */
+	pros::DeviceType get_type() const;
+///@}
 };  // Gps Class
+
+namespace literals {
+	const pros::Gps operator""_gps(const unsigned long long int g);
+}  // namespace literals
 
 using GPS = Gps;
 
-}  // namespace pros
+} // namespace v5
+} // namespace pros
+
 #endif
